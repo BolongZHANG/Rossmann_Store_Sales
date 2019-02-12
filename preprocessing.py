@@ -26,6 +26,7 @@ def preprocess(df, store):
         df['PromoInterval_'+mon] = df['PromoInterval'].map(lambda x: float(mon in x))
         
     df.drop(columns=['DayOfWeek', 'Date', 'StateHoliday', 'StoreType', 'Assortment', 'PromoInterval'], inplace=True)
+    df.fillna(-1, inplace=True)
 
     return df
 
