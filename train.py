@@ -1,4 +1,6 @@
-from preprocessing.preprocess import preprocess
+from preprocessing import preprocess
+import pandas as pd
+import numpy as np
 from joblib import dump, load
 import xgboost as xgb
 from sklearn.ensemble import RandomForestRegressor
