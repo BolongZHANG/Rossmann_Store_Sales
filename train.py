@@ -17,8 +17,8 @@ X_test = df_test.drop(['Id'],axis = 1)
 
 clf_1 = RandomForestRegressor(max_depth=8, random_state=0, n_estimators=50, oob_score=True)
 clf_1.fit(X_train, Y_train)
-dump(clf_1, 'randomForest.joblib')
+dump(clf_1, 'model/randomForest.joblib')
 
 clf_2 = xgb.XGBRegressor(max_depth=8, n_estimators=100, early_stopping_rounds=50)
 clf_2.fit(X_train, Y_train)
-dump(clf_2, 'XGboost.joblib')
+dump(clf_2, 'model/XGboost.joblib')

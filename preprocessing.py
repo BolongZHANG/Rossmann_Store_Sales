@@ -27,7 +27,7 @@ def preprocess(df, store):
         
     df.drop(columns=['DayOfWeek', 'Date', 'StateHoliday', 'StoreType', 'Assortment', 'PromoInterval'], inplace=True)
     df.fillna(-1, inplace=True)
-
+    
     return df
 
 
