@@ -38,4 +38,3 @@ if __name__ == "__main__":
     store = pd.read_csv("data/store.csv")
     df_train = preprocess(train, store)
     df_test = preprocess(test, store)
-    print (df_train.head())
