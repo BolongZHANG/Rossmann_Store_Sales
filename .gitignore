@@ -5,5 +5,5 @@
 /cache
 /.DS_Store
 
-/model/
-/result/
+/model
+/result
