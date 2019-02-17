@@ -14,11 +14,16 @@ if __name__ == "__main__":
     store = pd.read_csv("data/store.csv")
     
     df_train = preprocess(train, store)
-    df_test = preprocess(test, store)
+    df_train = add_feature(df_train)
+    df_train = fill_and_drop(df_train)
     
-    X_train = df_train.drop(['Store', 'Sales','Customers'], axis=1)
+    df_test = preprocess(test, store)
+    df_test = add_feature(df_test)
+    df_test = fill_and_drop(df_test)
+    
+    X_train = df_train.drop(['Sales','Customers'], axis=1)
     y_train = df_train['Sales']
-    X_test = df_test.drop(['Store', 'Id'], axis=1)
+    X_test = df_test.drop(['Id'], axis=1)
 
     #load model
     model_randomForest = load("model/randomForest.joblib")
