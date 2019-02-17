@@ -33,16 +33,16 @@ if __name__ == "__main__":
     df_train = preprocess(train, store)
     df_test = preprocess(test, store)
 
-    X_train = df_train.drop(['Store', 'Sales','Customers'], axis=1)
+    X_train = df_train.drop(['Sales','Customers'], axis=1)
     y_train = df_train['Sales']
-    X_test = df_test.drop(['Id', 'Store'], axis=1)
+    X_test = df_test.drop(['Id'], axis=1)
 
     # rf = RandomForestRegressor(max_depth=8, random_state=0, n_estimators=50, oob_score=True)
     # rf.fit(X_train, y_train)
     # print (sorted(list(zip(X_train.columns, rf.feature_importances_)), key=lambda x: x[1]))    
     
     xgb = XGBRegressor(max_depth=10, n_estimators=500, subsample=0.9, colsample_bytree=0.7, early_stopping_rounds=100)
-    xgb.fit(X_train, y_train)
+    # xgb.fit(X_train, y_train)
     scores = cross_validation(xgb, X_train, y_train, 5)
     print (scores)
     print (np.mean(scores))
