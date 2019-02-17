@@ -62,13 +62,17 @@ def add_feature(df):
     return df
 
 
-def fill_and_drop(df):
+def fill_and_drop(df, withoutOpen=False):
     df['CompetitionDistance'].fillna(100000, inplace=True)
     df['CompetitionOpenMonthsAgo'].fillna(0, inplace=True)
     df['Promo2OpenMonthsAgo'].fillna(0, inplace=True)
     
     df.drop(columns=['Store', 'DayOfWeek', 'StateHoliday', 'StoreType', 'Assortment', 'PromoInterval', 'Date'], inplace=True)
     df.drop(columns=['CompetitionOpenSinceYear', 'CompetitionOpenSinceMonth', 'Promo2SinceYear', 'Promo2SinceWeek'], inplace=True)
+
+    if withoutOpen:
+        df = df[df['Open']!=0]
+        df.drop(['Open'], inplace=True)
 
     return df
 

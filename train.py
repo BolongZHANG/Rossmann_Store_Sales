@@ -18,9 +18,9 @@ def rmspe(y_true, y_pred):
     return loss
 
 
-def cross_validation(clf, X, Y, n):
+def cross_validation(clf, X, y, n):
     scorer = make_scorer(rmspe)
-    scores = cross_val_score(clf, X, Y, cv=n, scoring=scorer)
+    scores = cross_val_score(clf, X, y, cv=n, scoring=scorer)
     return scores
 
 
