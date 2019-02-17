@@ -10,7 +10,7 @@ def preprocess(df, store):
     df['Date'] = df['Date'].map(lambda x: datetime.strptime(x, "%Y-%m-%d"))
     # df['DaysSince20150731'] = df['Date'].map(lambda x: (datetime.strptime(x, "%Y-%m-%d") - datetime.strptime("2015-07-31", "%Y-%m-%d")).days)
         
-    day2str = {1:'Mon', 2:'Tue', 3:'Wed', 4:'Thu', 5:'Fri', 6:'Sat', 7:'SUn'}
+    day2str = {1:'Mon', 2:'Tue', 3:'Wed', 4:'Thu', 5:'Fri', 6:'Sat', 7:'Sun'}
     for i in range(1, 8):
         df[day2str[i]] = (df['DayOfWeek'] == i).astype(float)
         

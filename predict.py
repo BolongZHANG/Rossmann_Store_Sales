@@ -1,4 +1,4 @@
-from preprocessing import preprocess
+from preprocessing import preprocess, add_feature, fill_and_drop
 from joblib import dump, load
 import pandas as pd
 import numpy as np

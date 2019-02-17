@@ -1,4 +1,4 @@
-from preprocessing import preprocess
+from preprocessing import preprocess, add_feature, fill_and_drop
 import pandas as pd
 import numpy as np
 from joblib import dump, load
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     # rf.fit(X_train, y_train)
     # print (sorted(list(zip(X_train.columns, rf.feature_importances_)), key=lambda x: x[1]))    
     
-    xgb = XGBRegressor(max_depth=10, n_estimators=500, subsample=0.9, colsample_bytree=0.7, early_stopping_rounds=100)
+    xgb = XGBRegressor(max_depth=10, n_estimators=500, learning_rate=0.03, subsample=0.9, colsample_bytree=0.7, early_stopping_rounds=100, n_jobs=3)
     # xgb.fit(X_train, y_train)
     scores = cross_validation(xgb, X_train, y_train, 5)
     print (scores)
