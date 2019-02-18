@@ -18,6 +18,6 @@ if __name__ == "__main__":
     xgb = load("model/XGboost.joblib")
 
     #make prediciton
-    test['Sales'] = xgb.predict(X_test)
+    test['Sales'] = xgb.predict(X_test) * 0.985
     test.loc[test['Open']==0, 'Sales'] = 0
     test.drop(columns=['Open']).to_csv('result/xgb_1500.csv', index=False)
