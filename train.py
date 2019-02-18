@@ -1,4 +1,4 @@
-from preprocessing import preprocess, add_feature, fill_and_drop
+from preprocessing import data_prepare
 import pandas as pd
 import numpy as np
 from joblib import dump, load
@@ -12,6 +12,8 @@ def rmspe(y_true, y_pred):
     '''
     Compute Root Mean Square Percentage Error between two arrays.
     '''
+    y_true = np.expm1(y_true)
+    y_pred = np.expm1(y_pred*0.995)
     res = pd.DataFrame(list(zip(y_true, y_pred)), columns=['true', 'pred'])
     res = res[res['true']!=0]
     loss = np.sqrt(np.mean(np.square((res['true'] - res['pred']) / res['true']), axis=0))
@@ -19,6 +21,7 @@ def rmspe(y_true, y_pred):
 
 
 def cross_validation(clf, X, y, n):
+    y = np.log1p(y)
     scorer = make_scorer(rmspe)
     scores = cross_val_score(clf, X, y, cv=n, scoring=scorer)
     return scores
@@ -26,29 +29,17 @@ def cross_validation(clf, X, y, n):
 
 if __name__ == "__main__":
 
-    train = pd.read_csv("data/train.csv")
-    test = pd.read_csv("data/test.csv")
-    store = pd.read_csv("data/store.csv")
-    
-    df_train = preprocess(train, store)
-    df_train = add_feature(df_train)
-    df_train = fill_and_drop(df_train)
-    
-    df_test = preprocess(test, store)
-    df_test = add_feature(df_test)
-    df_test = fill_and_drop(df_test)
+    X_train, y_train, _ = data_prepare(True)
 
-    X_train = df_train.drop(['Sales','Customers'], axis=1)
-    y_train = df_train['Sales']
-    X_test = df_test.drop(['Id'], axis=1)
-
-    # rf = RandomForestRegressor(max_depth=8, random_state=0, n_estimators=50, oob_score=True)
-    # rf.fit(X_train, y_train)
-    # print (sorted(list(zip(X_train.columns, rf.feature_importances_)), key=lambda x: x[1]))    
+    # rf = RandomForestRegressor(n_estimators=15, criterion='mse', max_depth=15, n_jobs=3)
+    # scores = cross_validation(rf, X_train, y_train, 5)
+    # print (scores)
+    # print (np.mean(scores))
     
-    xgb = XGBRegressor(max_depth=10, n_estimators=500, learning_rate=0.03, subsample=0.9, colsample_bytree=0.7, early_stopping_rounds=100, n_jobs=3)
-    # xgb.fit(X_train, y_train)
-    scores = cross_validation(xgb, X_train, y_train, 5)
-    print (scores)
-    print (np.mean(scores))
-    # dump(clf_2, 'model/XGboost.joblib')
+    xgb = XGBRegressor(max_depth=12, n_estimators=1500, learning_rate=0.03, subsample=0.8, colsample_bytree=0.7, early_stopping_rounds=100, n_jobs=3)
+    # scores = cross_validation(xgb, X_train, y_train, 5)
+    # print (scores)
+    # print (np.mean(scores))
+    
+    xgb.fit(X_train, y_train)
+    dump(xgb, 'model/XGboost.joblib')

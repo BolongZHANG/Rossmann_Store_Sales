@@ -62,31 +62,48 @@ def add_feature(df):
     return df
 
 
-def fill_and_drop(df, withoutOpen=False):
-    df['CompetitionDistance'].fillna(100000, inplace=True)
+def fill_and_drop(df, withoutOpen=False, isTest=False):
+    df['CompetitionDistance'].fillna(1000000, inplace=True)
     df['CompetitionOpenMonthsAgo'].fillna(0, inplace=True)
     df['Promo2OpenMonthsAgo'].fillna(0, inplace=True)
     
-    df.drop(columns=['Store', 'DayOfWeek', 'StateHoliday', 'StoreType', 'Assortment', 'PromoInterval', 'Date'], inplace=True)
+    df.drop(columns=['DayOfWeek', 'StateHoliday', 'StoreType', 'Assortment', 'PromoInterval', 'Date'], inplace=True)
     df.drop(columns=['CompetitionOpenSinceYear', 'CompetitionOpenSinceMonth', 'Promo2SinceYear', 'Promo2SinceWeek'], inplace=True)
 
     if withoutOpen:
         df = df[df['Open']!=0]
-        df.drop(['Open'], inplace=True)
+        df.drop(columns=['Open'], inplace=True)
+
+    if not isTest:
+        df = df[df['Sales']>0]
 
     return df
 
 
-
-if __name__ == "__main__":
+def data_prepare(withoutOpen=False):
     train = pd.read_csv("data/train.csv")
     test = pd.read_csv("data/test.csv")
     store = pd.read_csv("data/store.csv")
     
+    # there are NaN of Open in test, fill it 1
+    test.fillna(1, inplace=True)
+
     df_train = preprocess(train, store)
     df_train = add_feature(df_train)
-    df_train = fill_and_drop(df_train)
+    df_train = fill_and_drop(df_train, withoutOpen)
     
     df_test = preprocess(test, store)
     df_test = add_feature(df_test)
-    df_test = fill_and_drop(df_test)
+    df_test = fill_and_drop(df_test, withoutOpen, True)
+
+    X_train = df_train.drop(['Sales','Customers'], axis=1)
+    y_train = df_train['Sales']
+    X_test = df_test.drop(['Id'], axis=1)
+
+    return X_train, y_train, X_test
+
+
+
+
+if __name__ == "__main__":
+    X_train, y_train, X_test = data_prepare(True)
