@@ -13,7 +13,7 @@ def rmspe(y_true, y_pred):
     Compute Root Mean Square Percentage Error between two arrays.
     '''
     y_true = np.expm1(y_true)
-    y_pred = np.expm1(y_pred*0.985)
+    y_pred = np.expm1(y_pred * 0.985)
     res = pd.DataFrame(list(zip(y_true, y_pred)), columns=['true', 'pred'])
     res = res[res['true']!=0]
     loss = np.sqrt(np.mean(np.square((res['true'] - res['pred']) / res['true']), axis=0))
@@ -41,5 +41,5 @@ if __name__ == "__main__":
     # print (scores)
     # print (np.mean(scores))
     
-    # xgb.fit(X_train, y_train)
+    # xgb.fit(X_train, np.log1p(y_train))
     # dump(xgb, 'model/XGboost.joblib')
